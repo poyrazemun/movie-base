@@ -19,16 +19,28 @@ const updateUI = () => {
 };
 
 const deleteMovie = (movieId) => {
-  movies.splice(
-    movies.findIndex((movie) => movie.id === movieId),
-    1
-  );
+  const movieElement = document.querySelector(`[data-id="${movieId}"]`);
 
-  document.querySelector(`[data-id="${movieId}"]`).remove();
+  if (!movieElement) {
+    console.warn(`Element with data-id="${movieId}" not found initially.`);
+    return;
+  }
+
+  movieElement.remove();
+  console.log(`Movie element with data-id="${movieId}" removed.`);
+
+  const movieIndex = movies.findIndex((movie) => movie.id === movieId);
+
+  if (movieIndex !== -1) {
+    movies.splice(movieIndex, 1);
+    //console.log(`Movie with id ${movieId} removed from array.`);
+  }
 
   if (movies.length === 0) {
     entryTextSection.style.display = "block";
   }
+
+  cancelMovieDeletion();
 };
 
 const cancelMovieDeletion = () => {
@@ -39,8 +51,17 @@ const cancelMovieDeletion = () => {
 const deleteMovieHandler = (movieId) => {
   deleteMovieModal.classList.add("visible");
   toggleBackdrop();
-  const cancelDeletionButton = deleteMovieModal.querySelector("btn--passive");
-  const confirmDeletionButton = deleteMovieModal.querySelector("btn--danger");
+  const cancelDeletionButton = deleteMovieModal.querySelector(".btn--passive");
+  let confirmDeletionButton = deleteMovieModal.querySelector(".btn--danger");
+
+  confirmDeletionButton.replaceWith(confirmDeletionButton.cloneNode(true));
+  //since we bind this element with movieId below, we do not solve with removeEventListener. Therefore I have swapped
+  //the deletion button
+
+  confirmDeletionButton = deleteMovieModal.querySelector(".btn--danger");
+
+  cancelDeletionButton.removeEventListener("click", cancelMovieDeletion);
+
   cancelDeletionButton.addEventListener("click", cancelMovieDeletion);
   confirmDeletionButton.addEventListener(
     "click",
@@ -129,11 +150,13 @@ const addMovieToTheDatabase = () => {
 const backdropClickHandler = () => {
   closeMovieModal();
   cancelMovieDeletion();
+  clearMovieInputs();
 };
 
 const cancelAddMovie = () => {
   closeMovieModal();
   clearMovieInputs();
+  toggleBackdrop();
 };
 
 startAddMovieButton.addEventListener("click", showMovieModal);
