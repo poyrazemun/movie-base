@@ -250,3 +250,18 @@ input:focus {
     transform: translateY(0);
   }
 }
+
+.delete-btn {
+  background-color: red; /* Kırmızı arka plan */
+  color: white; /* Beyaz yazı rengi */
+  font-size: 14px; /* Yazı boyutu */
+  padding: 8px 16px; /* Yatay ve dikey padding */
+  border: none; /* Sınırları kaldır */
+  border-radius: 5px; /* Köşe yuvarlama */
+  cursor: pointer; /* İmleci işaretçi olarak değiştir */
+  transition: background-color 0.3s ease; /* Geçiş animasyonu */
+}
+
+.delete-btn:hover {
+  background-color: darkred; /* Hover durumunda koyu kırmızı */
+}
